@@ -24,3 +24,5 @@ RLS 限制账号只能读写自己的进度。`word_atlas_commit` 在事务中�
 仓库 Variables 设置 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_PUBLISHABLE_KEY`，Pages 选择 GitHub Actions。`.github/workflows/pages.yml` 从 `codex/mobile-sync` 构建发布。其他 Fork 需相应调整工作流分支、`ATLAS_BASE` 路径和 Supabase 允许的回调网址。
 
 运行 `npm test` 和 `npm run build` 进行本地验证。不配置 Supabase 时仍可使用原有本地学习功能。
+
+云端发布包不包含已停用的第一条日常例句录音（约 208 MB），原始仓库文件保留。单词发音、第二条例句录音及全部插画照常发布。

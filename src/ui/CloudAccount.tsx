@@ -96,7 +96,7 @@ export function CloudAccount() {
       } else if (mode === "reset") {
         const { error } = await supabase.auth.resetPasswordForEmail(
           email.trim(),
-          { redirectTo: `${location.origin}${import.meta.env.BASE_URL}#/me` },
+          { redirectTo: `${location.origin}${import.meta.env.BASE_URL}` },
         );
         if (error) throw error;
         setMessage("若该邮箱已注册，将收到重设密码的邮件。");
