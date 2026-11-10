@@ -5,6 +5,7 @@ import { isMastered } from "../store/srs";
 import { dayKey, exportBackup, importBackup, resetProgress, store, useStore, type Settings } from "../store/store";
 import { toast } from "../ui/Toast";
 import { streakOf } from "./Today";
+import { CloudAccount } from "../ui/CloudAccount";
 
 export function Me({ privateAvailable }: { privateAvailable: boolean }) {
   const atlas = useAtlas();
@@ -88,6 +89,7 @@ export function Me({ privateAvailable }: { privateAvailable: boolean }) {
       </section>
 
       <div className="me-grid">
+        <CloudAccount />
         <section className="panel">
           <h3 className="eyebrow">过去 20 周</h3>
           <Heatmap days={progress.days} />
@@ -181,7 +183,7 @@ export function Me({ privateAvailable }: { privateAvailable: boolean }) {
 
         <section className="panel">
           <h3 className="eyebrow">数据</h3>
-          <p className="muted">进度只存在这台设备的浏览器里：没有账号，没有服务器。换设备时，导出备份再导入即可。</p>
+          <p className="muted">未登录时，进度保存在当前浏览器。登录后可在手机与电脑之间同步；导出备份还能独立保留一份学习记录。</p>
           {saveError && <p className="warn-text">浏览器拒绝保存（可能是隐私模式或空间已满）。请尽快导出备份。</p>}
           <div className="data-actions">
             <button className="btn btn-ghost" onClick={download}>

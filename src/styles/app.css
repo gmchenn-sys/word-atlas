@@ -4120,3 +4120,16 @@ a:hover .mark-needle,
 .streak-panel .mini-stats div:first-child dd {
   color: var(--ochre);
 }
+
+/* Account controls use the existing mobile layout and touch targets. */
+.sync-indicator { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:12px; white-space:nowrap; min-height:40px; text-decoration:none; }
+.sync-error,.sync-offline { color:#c8824e; }
+.cloud-form { display:grid; gap:14px; margin-block:20px; }
+.cloud-form label { display:grid; gap:8px; font-size:14px; }
+.cloud-form input { width:100%; min-width:0; min-height:46px; border:1px solid var(--line, #7775); border-radius:10px; background:transparent; color:inherit; padding:10px 12px; font:inherit; font-size:16px; }
+.cloud-actions { display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:18px; }
+.account-email { overflow-wrap:anywhere; font-size:18px; }
+.sync-message { display:flex; gap:8px; align-items:center; font-size:14px; }
+.cloud-migration { margin-top:22px; padding-top:16px; border-top:1px solid var(--line, #7775); }
+.cloud-feedback { margin-top:16px; line-height:1.6; overflow-wrap:anywhere; }
+@media(max-width:559px) { .sync-indicator span { display:none; } .cloud-actions .btn { flex:1; } .cloud-account .btn { min-height:44px; } }

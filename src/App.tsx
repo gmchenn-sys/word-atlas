@@ -21,6 +21,8 @@ import { Palette } from "./ui/Palette";
 import { Sheet } from "./ui/Sheet";
 import { shouldShowSplash, Splash } from "./ui/Splash";
 import { Toasts } from "./ui/Toast";
+import { startCloudSync, useCloudSync } from "./store/cloud-sync";
+import { SyncIndicator } from "./ui/CloudAccount";
 
 const NAV: { page: Route["page"]; label: string; icon: typeof Compass }[] = [
   { page: "today", label: "今日", icon: Compass },
@@ -48,6 +50,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const dataset = useStore((s) => s.settings.dataset);
   useTheme();
+  useEffect(startCloudSync, []);
 
   useEffect(() => {
     loadOpenAtlas().then(
@@ -98,6 +101,7 @@ function Shell({ privateAvailable }: { privateAvailable: boolean }) {
   const [palette, setPalette] = useState(false);
   const [splash, setSplash] = useState(shouldShowSplash);
   const focus = route.page === "learn";
+  const sync = useCloudSync();
 
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
@@ -136,6 +140,7 @@ function Shell({ privateAvailable }: { privateAvailable: boolean }) {
             ))}
           </nav>
           <div className="topbar-tools">
+            <SyncIndicator />
             <button className="search-pill" onClick={() => setPalette(true)} aria-label="搜索单词">
               <Search size={17} />
               <span>搜索单词</span>
@@ -187,7 +192,7 @@ function Shell({ privateAvailable }: { privateAvailable: boolean }) {
 
       <WordSheet id={word} />
       <Palette open={palette} onClose={() => setPalette(false)} />
-      {!onboarded && route.page !== "about" && !splash && <Onboarding />}
+      {!onboarded && sync.status !== "syncing" && route.page !== "me" && route.page !== "about" && !splash && <Onboarding />}
       {splash && <Splash onDone={() => setSplash(false)} />}
       <Toasts />
       <AmbienceController />

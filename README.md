@@ -1,3 +1,9 @@
+## 手机与电脑同步（可选配置）
+
+新增独立邮箱注册、登录与密码恢复，支持跨设备进度同步和离线补传。账号数据与原本地进度分开保存；学习进度、收藏、学习设置和未结束的练习可以合并到云端。需要配置 Supabase 项目，见 [云同步部署说明](docs/cloud-sync.md)。未配置时仍可本地学习。原有插画与“仅保留第二条雅思语境例句”的修改继续保留。
+
+---
+
 ## 个人修改版：仅保留雅思语境例句
 
 本版本由 [@gmchenn-sys](https://github.com/gmchenn-sys) 维护，基于原作者 [@designfuchen](https://github.com/designfuchen) 的 [Word Atlas · 词光](https://github.com/designfuchen/word-atlas) 修改。此为独立个人修改版。

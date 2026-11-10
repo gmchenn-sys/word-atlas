@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import type { Accent } from "../atlas/types";
 import type { CardState, Grade } from "./srs";
+import { SYNC_SETTINGS, type CloudCheckpoint, type SyncDocument } from "./sync-merge";
 
 export type QuizKind = "meaning" | "picture" | "listen" | "spell";
 export type Step = { id: string; kind: "intro" } | { id: string; kind: QuizKind; retry?: boolean; options?: string[] };
@@ -179,12 +180,16 @@ export function sanitizeSettings(v: unknown): Settings {
 /* ---------- store ---------- */
 
 interface State {
+  account: string | null;
+  cloud: CloudCheckpoint | null;
   progress: Progress;
   settings: Settings;
   saveError: boolean;
 }
 
 let state: State = {
+  account: null,
+  cloud: null,
   progress: emptyProgress("word-atlas-open"),
   settings: sanitizeSettings(read(SETTINGS_KEY)),
   saveError: false,
@@ -210,8 +215,9 @@ export function flush() {
   window.clearTimeout(saveTimer);
   if (!dirty) return;
   dirty = false;
-  const progressOk = loadedId !== state.progress.datasetId || write(progressKey(state.progress.datasetId), state.progress);
-  const ok = progressOk && write(SETTINGS_KEY, state.settings);
+  const ok = state.account
+    ? write(`word-atlas:account:${state.account}:${state.progress.datasetId}`, { progress: state.progress, settings: state.settings, cloud: state.cloud })
+    : (loadedId !== state.progress.datasetId || write(progressKey(state.progress.datasetId), state.progress)) && write(SETTINGS_KEY, state.settings);
   if (ok === state.saveError) {
     state = { ...state, saveError: !ok };
     emit();
@@ -224,6 +230,7 @@ if (typeof window !== "undefined") {
   // Another tab saved: adopt its data instead of keeping a stale copy.
   window.addEventListener("storage", (e) => {
     if (!e.newValue) return;
+    if (state.account) return; // Account records are synchronized through the cloud controller.
     try {
       if (e.key === SETTINGS_KEY) state = { ...state, settings: sanitizeSettings(JSON.parse(e.newValue)) };
       else if (e.key === progressKey(state.progress.datasetId))
@@ -244,8 +251,29 @@ export const store = {
   },
   useDataset(datasetId: string) {
     flush();
-    state = { ...state, progress: sanitizeProgress(read(progressKey(datasetId)), datasetId) };
+    const record = state.account ? read<{progress: unknown; settings: unknown; cloud: CloudCheckpoint}>(`word-atlas:account:${state.account}:${datasetId}`) : null;
+    state = { ...state, progress: sanitizeProgress(record?.progress ?? (state.account ? null : read(progressKey(datasetId))), datasetId), cloud: record?.cloud ?? null,
+      settings: state.account ? sanitizeSettings(record?.settings) : state.settings };
     loadedId = datasetId;
+    emit();
+  },
+  useAccount(account: string | null) {
+    if (state.account === account) return;
+    flush();
+    const id = state.progress.datasetId;
+    const record = account ? read<{progress: unknown; settings: unknown; cloud: CloudCheckpoint}>(`word-atlas:account:${account}:${id}`) : null;
+    state = { ...state, account, cloud: record?.cloud ?? null,
+      progress: sanitizeProgress(record?.progress ?? (account ? null : read(progressKey(id))), id),
+      settings: sanitizeSettings(account ? record?.settings : read(SETTINGS_KEY)) };
+    loadedId = id;
+    emit();
+  },
+  applyCloud(document: SyncDocument, cloud: CloudCheckpoint) {
+    const settings = { ...state.settings };
+    for (const key of SYNC_SETTINGS) Object.assign(settings, { [key]: document.settings[key] });
+    state = { ...state, progress: sanitizeProgress(document.progress, state.progress.datasetId), settings, cloud };
+    dirty = true;
+    flush(); // Progress, baseline and outbox are one atomic localStorage record.
     emit();
   },
   progress(fn: (p: Progress) => Progress) {
@@ -319,4 +347,10 @@ export function resetProgress() {
   emit();
   markDirty();
   flush();
+}
+
+/** Guest data is retained separately so signing in never silently overwrites it. */
+export function guestDocument(): SyncDocument {
+  const id = state.progress.datasetId;
+  return { progress: sanitizeProgress(read(progressKey(id)), id), settings: sanitizeSettings(read(SETTINGS_KEY)) };
 }

@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useAtlas } from "../atlas/context";
+import { supabase } from "../lib/supabase";
 import { store } from "../store/store";
 
 const LEVELS = [
@@ -51,7 +52,7 @@ export function Onboarding() {
           <button className="btn btn-primary btn-xl" onClick={finish}>
             出发 <ArrowRight size={20} />
           </button>
-          <p className="muted">不用注册。进度只留在这台设备上，随时可以在「我的」里修改。</p>
+          <p className="muted">可以先在本机学习，随时在「我的」里修改设置。{supabase && <> <a href="#/me">已有账号？登录并接续进度</a></>}</p>
         </div>
       </div>
     </div>
