@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { prefetch, useAtlas, useEntry } from "../atlas/context";
 import type { Entry, WordRef } from "../atlas/types";
 import { play, stopAudio } from "../lib/audio";
+import { useAutoplay } from "../lib/useAutoplay";
 import { burst } from "../lib/burst";
 import { cue } from "../lib/sound";
 import { go } from "../lib/router";
@@ -93,9 +94,7 @@ function Intro({ step }: { step: Step }) {
   const { entry } = useEntry(step.id);
   const settings = useStore((s) => s.settings);
   const elapsed = useStepTimer();
-  useEffect(() => {
-    if (entry && settings.autoplay) void play(atlas.audio(entry, settings.accent), entry.w, settings.accent);
-  }, [entry, atlas, settings.autoplay, settings.accent]);
+  useAutoplay(settings.autoplay, entry?.w, entry ? atlas.audio(entry, settings.accent) : null, settings.accent);
   const next = useCallback(() => {
     stopAudio();
     if (store.get().settings.sfx) void cue("flip");
@@ -159,9 +158,7 @@ function Quiz({ step, session }: { step: Step & { kind: QuizKind }; session: Act
     advance(elapsed());
   }, [elapsed]);
 
-  useEffect(() => {
-    if (step.kind === "listen" && entry && !pending) void play(atlas.audio(entry, settings.accent), entry.w, settings.accent);
-  }, [step.kind, entry, atlas, settings.accent, pending]);
+  useAutoplay(step.kind === "listen" && !pending, entry?.w, entry ? atlas.audio(entry, settings.accent) : null, settings.accent);
 
   const keys: Record<string, () => void> = {};
   if (pending) {

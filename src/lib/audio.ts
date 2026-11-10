@@ -20,6 +20,15 @@ export async function play(url: string | null | undefined, text: string, accent:
   }
 }
 
+/** Cancel only this automatic playback; never interrupt a later manual replay. */
+export function playAutomatic(url: string | null, text: string, accent: "uk" | "us") {
+  void play(url, text, accent).catch(() => undefined);
+  const owner = token;
+  return () => {
+    if (token === owner) stopAudio();
+  };
+}
+
 async function speak(url: string | null | undefined, text: string, accent: "uk" | "us", rate: number) {
   stopAudio();
   const mine = ++token;
