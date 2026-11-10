@@ -117,7 +117,7 @@ export function EntryView({ entry, mode = "detail", eager = true }: { entry: Ent
 
         {entry.ex.length > 0 && (
           <section className="block">
-            <h3 className="eyebrow">例句</h3>
+            <h3 className="eyebrow">{atlas.kind === "open" ? "雅思语境例句" : "例句"}</h3>
             <ul className="examples">
               {entry.ex.map((x, i) => (
                 <li key={i}>

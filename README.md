@@ -1,3 +1,17 @@
+## 个人修改版：仅保留雅思语境例句
+
+本版本由 [@gmchenn-sys](https://github.com/gmchenn-sys) 维护，基于原作者 [@designfuchen](https://github.com/designfuchen) 的 [Word Atlas · 词光](https://github.com/designfuchen/word-atlas) 修改。此为独立个人修改版。
+
+**2026-11-10 修改说明：** 保留全部原版插画、单词释义、发音及间隔复习功能；界面仅保留每个词原版第二条“雅思语境”例句，不再显示第一条日常例句。学习题、填空、拼写提示、抄写、听写和分享卡片统一使用保留例句；朗读使用对应的第二句录音，没有录音时使用设备语音。原始词库和媒体文件保留，修改在应用加载时生效。
+
+“雅思语境”是原项目的分类，例句为 AI 生成内容，**不是已核实的雅思真题原句**。原版图片仍可能描绘日常例句中的场景。
+
+代码与本版本代码修改沿用 [MIT](LICENSE)；词库、插画和词条录音署名 **Word Atlas contributors — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**，授权范围见 [CONTENT_LICENSE.md](CONTENT_LICENSE.md)。保留原项目版权与许可声明。
+
+验证：`npm test`（包含全部 7,298 个词的例句筛选和录音标记检查）、`npm run build`。安装与使用方法见下方原项目说明；下方展示的预览与数据数量描述属于原版。
+
+---
+
 <div align="center">
 
 <a href="https://0xlei.tech/words/"><img src="docs/assets/cover-v2.jpg" alt="词光 Word Atlas — 一词一画，点亮雅思" width="100%"></a>

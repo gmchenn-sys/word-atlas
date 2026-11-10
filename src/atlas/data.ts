@@ -1,5 +1,6 @@
 import type { Atlas, Entry, IndexRow, WordRef } from "./types";
 import { MEDIA } from "./types";
+import { ieltsEntry, ieltsMedia } from "./ielts";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const url = (p: string) => `${BASE}/atlas/${p}`;
@@ -27,7 +28,7 @@ export async function loadOpenAtlas(): Promise<Atlas> {
     ipa: r[3],
     cefr: r[4],
     topic: r[5],
-    media: r[6],
+    media: ieltsMedia(r[6]),
     order,
   }));
   const byId = new Map(words.map((w) => [w.id, w]));
@@ -42,7 +43,7 @@ export async function loadOpenAtlas(): Promise<Atlas> {
           if (!r.ok) throw new Error(`词条加载失败（${r.status}）`);
           return r.json() as Promise<Entry[]>;
         })
-        .then((list) => list.forEach((e) => cache.set(e.id, e)))
+        .then((list) => list.forEach((e) => cache.set(e.id, ieltsEntry(e))))
         .catch((e) => {
           pending.delete(n);
           throw e;
@@ -57,7 +58,7 @@ export async function loadOpenAtlas(): Promise<Atlas> {
     name: idx.name,
     kind: "open",
     count: idx.count,
-    examples: idx.examples,
+    examples: idx.count,
     illustrated: idx.illustrated,
     topics: idx.topics,
     cefr: idx.cefr,
@@ -80,8 +81,11 @@ export async function loadOpenAtlas(): Promise<Atlas> {
         : null,
     audio(ref, kind) {
       const m = "media" in ref && typeof ref.media === "number" ? ref.media : (ref as Entry).m;
+      // The retained example is the original second sentence. Never play ex/ for it.
+      if (kind === "ex2") return null;
       const bit = MEDIA[kind];
-      return m & bit ? url(`audio/${kind}/${ref.id}.mp3`) : null;
+      const folder = kind === "ex" ? "ex2" : kind;
+      return m & bit ? url(`audio/${folder}/${ref.id}.mp3`) : null;
     },
   };
 }

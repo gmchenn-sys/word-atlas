@@ -9,3 +9,6 @@ output/
 .DS_Store
 .playwright-cli/
 *.tsbuildinfo
+
+# Machine-specific launcher configuration and logs
+.local-install/

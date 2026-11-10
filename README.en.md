@@ -1,3 +1,15 @@
+## Personal fork: IELTS-context examples only
+
+Maintained by [@gmchenn-sys](https://github.com/gmchenn-sys), based on [Word Atlas](https://github.com/designfuchen/word-atlas) by [@designfuchen](https://github.com/designfuchen). This is an independent personal fork.
+
+Changes (2026-11-10): retain original illustrations and vocabulary features, but show only the original second, IELTS-context example. Learning questions, cloze prompts, spelling hints, typing, dictation and share cards use that example. Playback uses its matching second-example recording, or device speech when unavailable. Source datasets and media remain intact; filtering happens when the app loads them. Original illustrations may still depict the removed daily examples.
+
+These are AI-generated IELTS-context examples, not verified quotations from IELTS exams. Code and modifications remain under [MIT](LICENSE). Vocabulary content, illustrations and word recordings: **Word Atlas contributors — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**; see [CONTENT_LICENSE.md](CONTENT_LICENSE.md). Original notices are retained.
+
+Validation: `npm test` and `npm run build`. The upstream documentation below describes the original edition.
+
+---
+
 <div align="center">
 
 <a href="https://0xlei.tech/words/"><img src="docs/assets/cover-v2.jpg" alt="词光 · Word Atlas — an illustrated world of words" width="100%"></a>
