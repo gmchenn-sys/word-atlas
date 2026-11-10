@@ -29,7 +29,8 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
       - name: Exclude unused daily-example recordings
-        run: node --input-type=module -e 'import { rmSync } from "node:fs"; rmSync("dist/atlas/audio/ex", { recursive: true, force: true });'
+        run: |
+          node --input-type=module -e 'import { rmSync } from "node:fs"; rmSync("dist/atlas/audio/ex", { recursive: true, force: true });'
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
